@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Perusahaan Anak — YKP BRI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#4C3A8C;
+    --indigo-dark:#392C68;
+    --indigo-deep:#2A2050;
+    --lavender:#EFEBFA;
+    --lavender-line:#DAD3EF;
+    --ink:#1F2430;
+    --ink-soft:#6B7280;
+    --paper:#F7F7FB;
+    --panel:#FFFFFF;
+    --line:#E4E2EE;
+    --green:#1E8E5A; --green-bg:#E6F5EC;
+    --amber:#B8790C; --amber-bg:#FBF0DC;
+    --blue:#2A5FCC; --blue-bg:#E8EEFC;
+    --red:#C23B3B; --red-bg:#FBE9E9;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+  }
+  h1,h2,h3{font-family:'Plus Jakarta Sans', sans-serif;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* ---------- LOGIN ---------- */
+  #login{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+  }
+  @media (max-width:860px){#login{grid-template-columns:1fr;}}
+  .login-left{
+    background:linear-gradient(160deg,#FAFAFD 0%,var(--lavender) 100%);
+    padding:56px 64px;
+    display:flex;
+    flex-direction:column;
+  }
+  .brandmark{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Plus Jakarta Sans';
+    font-weight:800;font-size:20px;
+    color:var(--indigo-deep);
+    margin-bottom:6px;
+  }
+  .brandmark .divider{width:1px;height:22px;background:var(--line);}
+  .brandmark .sub{font-family:'Inter';font-weight:500;font-size:12.5px;color:var(--ink-soft);}
+  .helpline{
+    position:absolute;top:28px;right:40px;
+    font-size:13px;color:var(--ink-soft);
+  }
+  .login-left h1{
+    font-size:34px;font-weight:700;line-height:1.25;
+    margin:48px 0 6px;color:var(--ink);
+  }
+  .login-left h1 span{color:var(--indigo);}
+  .login-left .desc{
+    font-size:14.5px;color:var(--ink-soft);line-height:1.6;
+    max-width:420px;margin-bottom:36px;
+  }
+  .feature-row{display:flex;gap:14px;margin-bottom:26px;max-width:440px;}
+  .feature-icon{
+    width:42px;height:42px;flex:none;
+    border-radius:12px;background:var(--panel);border:1px solid var(--lavender-line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;color:var(--indigo);
+  }
+  .feature-row h3{font-size:14.5px;margin:0 0 3px;font-weight:700;}
+  .feature-row p{font-size:13px;color:var(--ink-soft);margin:0;line-height:1.5;}
+
+  .login-right{
+    display:flex;align-items:center;justify-content:center;
+    padding:40px;position:relative;
+  }
+  .login-card{width:100%;max-width:380px;}
+  .login-card h2{font-size:22px;margin:0 0 4px;}
+  .login-card .sub{font-size:13.5px;color:var(--ink-soft);margin:0 0 26px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;}
+  .field input{
+    width:100%;padding:11px 13px;
+    border:1px solid var(--line);border-radius:9px;
+    font-family:inherit;font-size:14px;background:#FCFCFE;
+  }
+  .field input:focus{outline:none;border-color:var(--indigo);background:#fff;}
+  .row-between{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:22px;}
+  .row-between a{color:var(--indigo);text-decoration:none;font-weight:600;}
+  .checkline{display:flex;align-items:center;gap:6px;color:var(--ink-soft);}
+
+  .btn{
+    display:block;width:100%;text-align:center;
+    padding:12px;border-radius:9px;border:none;
+    font-family:'Plus Jakarta Sans';font-weight:700;font-size:14.5px;
+    cursor:pointer;
+  }
+  .btn-primary{background:var(--indigo);color:#fff;}
+  .btn-primary:hover{background:var(--indigo-dark);}
+  .btn-outline{background:#fff;color:var(--indigo);border:1.5px solid var(--indigo);margin-top:12px;}
+  .btn-outline:hover{background:var(--lavender);}
+  .or-sep{text-align:center;font-size:12px;color:var(--ink-soft);margin:18px 0;position:relative;}
+
+  .info-box{
+    margin-top:26px;background:var(--lavender);border-radius:10px;
+    padding:14px 16px;font-size:12.5px;color:var(--ink-soft);line-height:1.6;
+  }
+  .info-box b{color:var(--ink);}
+  .error-text{color:var(--red);font-size:13px;margin:-8px 0 14px;}
+
+  /* ---------- APP CHROME (home / upload / after) ---------- */
+  .topbar{
+    background:var(--indigo-deep);color:#fff;
+    padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+  }
+  .topbar .brandmark{color:#fff;margin:0;}
+  .topbar .brandmark .sub{color:#C9C2E8;}
+  .topbar .brandmark .divider{background:#5C4E90;}
+  .user-chip{display:flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer;}
+  .user-chip .av{
+    width:30px;height:30px;border-radius:50%;background:var(--indigo);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;
+  }
+  .crumbs{
+    padding:16px 32px 0;font-size:13px;color:var(--ink-soft);
+  }
+  .crumbs span{color:var(--ink);font-weight:600;}
+  main.app{max-width:1180px;margin:0 auto;padding:20px 32px 64px;}
+
+  /* home menu */
+  .home-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px;margin-top:8px;}
+  @media (max-width:760px){.home-grid{grid-template-columns:1fr;}}
+  .home-grid h2{font-size:22px;margin:0 0 18px;}
+  .menu-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px;display:flex;gap:16px;align-items:flex-start;
+    cursor:pointer;max-width:340px;
+  }
+  .menu-card:hover{border-color:var(--indigo);box-shadow:0 4px 18px rgba(76,58,140,0.08);}
+  .menu-card .icon{
+    width:44px;height:44px;border-radius:11px;background:var(--lavender);
+    display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--indigo);flex:none;
+  }
+  .menu-card h3{margin:0 0 3px;font-size:15px;}
+  .menu-card p{margin:0;font-size:13px;color:var(--ink-soft);}
+  .account-panel{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;
+    height:fit-content;
+  }
+  .account-panel .av-lg{
+    width:46px;height:46px;border-radius:50%;background:var(--indigo);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:10px;
+  }
+  .account-panel .name{font-weight:700;font-size:15px;margin-bottom:2px;}
+  .account-panel .role{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .account-panel a{font-size:13px;color:var(--indigo);text-decoration:none;font-weight:600;}
+
+  /* upload list */
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 16px;flex-wrap:wrap;gap:12px;}
+  .btn-sm{
+    padding:10px 16px;border-radius:9px;border:none;
+    background:var(--indigo);color:#fff;font-family:'Plus Jakarta Sans';font-weight:700;font-size:13.5px;
+    cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  }
+  .btn-sm:hover{background:var(--indigo-dark);}
+  .search-box{
+    display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;
+    padding:9px 13px;font-size:13.5px;color:var(--ink-soft);background:#fff;min-width:230px;
+  }
+  table.rka{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13.3px;}
+  table.rka th{
+    text-align:left;background:#FBFAFD;color:var(--ink-soft);font-weight:600;
+    padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;
+  }
+  table.rka td{padding:13px 14px;border-bottom:1px solid var(--line);}
+  table.rka tr:last-child td{border-bottom:none;}
+  table.rka tr:hover td{background:#FBFAFD;}
+  .badge{padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700;display:inline-block;}
+  .badge.draft{background:var(--lavender);color:var(--indigo);}
+  .badge.submitted{background:var(--blue-bg);color:var(--blue);}
+  .badge.checked{background:var(--amber-bg);color:var(--amber);}
+  .badge.approved{background:var(--green-bg);color:var(--green);}
+  .badge.rejected{background:var(--red-bg);color:var(--red);}
+  .icon-btn{
+    width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;
+    cursor:pointer;font-size:14px;color:var(--ink-soft);
+  }
+  .icon-btn:hover{border-color:var(--indigo);color:var(--indigo);}
+
+  .empty-note{
+    background:var(--lavender);border:1px solid var(--lavender-line);border-radius:10px;
+    padding:16px 18px;font-size:13.5px;color:var(--indigo-deep);margin-bottom:18px;
+  }
+
+  /* modal */
+  .overlay{
+    display:none;position:fixed;inset:0;background:rgba(20,16,40,0.42);
+    align-items:center;justify-content:center;z-index:20;
+  }
+  .overlay.active{display:flex;}
+  .modal{
+    background:#fff;border-radius:16px;padding:28px;width:100%;max-width:440px;
+  }
+  .modal h3{margin:0 0 4px;font-size:18px;}
+  .modal .sub{font-size:13px;color:var(--ink-soft);margin:0 0 20px;}
+  .dropzone{
+    border:1.5px dashed var(--lavender-line);border-radius:12px;background:var(--lavender);
+    padding:26px;text-align:center;font-size:13px;color:var(--indigo-deep);margin-bottom:18px;cursor:pointer;
+  }
+  .dropzone .fname{font-weight:700;margin-top:6px;}
+  .modal-actions{display:flex;gap:10px;margin-top:22px;}
+  .modal-actions .btn{margin:0;}
+  .btn-ghost{background:#fff;color:var(--ink-soft);border:1px solid var(--line);}
+
+  /* after upload */
+  .confirm-wrap{max-width:480px;margin:60px auto 0;text-align:center;}
+  .confirm-icon{
+    width:64px;height:64px;border-radius:50%;background:var(--green-bg);color:var(--green);
+    display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 18px;
+  }
+  .confirm-wrap h2{font-size:22px;margin:0 0 8px;}
+  .confirm-wrap p{color:var(--ink-soft);font-size:14px;margin:0 0 26px;line-height:1.6;}
+  .receipt{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;text-align:left;margin-bottom:24px;
+  }
+  .receipt .r-row{display:flex;justify-content:space-between;font-size:13.5px;padding:8px 0;border-bottom:1px solid var(--line);}
+  .receipt .r-row:last-child{border-bottom:none;}
+  .receipt .r-row .k{color:var(--ink-soft);}
+  .receipt .r-row .v{font-weight:600;}
+  .confirm-actions{display:flex;gap:10px;}
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN ================= -->
+<section class="screen active" id="login">
+  <div class="login-left">
+    <div class="helpline">? Butuh bantuan?</div>
+    <div class="brandmark">
+      YKP <span style="color:#C23B3B">BRI</span>
+      <div class="divider"></div>
+      <div class="sub">Portal Perusahaan Anak<br>Yayasan Kesejahteraan Pekerja BRI</div>
+    </div>
+
+    <h1>Selamat datang di<br><span>Portal Perusahaan Anak</span><br>YKP BRI</h1>
+    <p class="desc">Portal ini digunakan untuk pengelolaan data dan pengajuan dokumen Perusahaan Anak kepada YKP BRI secara terintegrasi.</p>
+
+    <div class="feature-row">
+      <div class="feature-icon">⇧</div>
+      <div><h3>Upload Dokumen</h3><p>Unggah dokumen RKA dan dokumen pendukung dengan mudah.</p></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-icon">◔</div>
+      <div><h3>Pantau Status</h3><p>Pantau status dokumen secara real-time hingga disetujui.</p></div>
+    </div>
+    <div class="feature-row">
+      <div class="feature-icon">⛨</div>
+      <div><h3>Aman &amp; Terpercaya</h3><p>Sistem aman dengan autentikasi dan otorisasi berlapis.</p></div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+      <h2>Login Portal PA</h2>
+      <p class="sub">Silakan masuk untuk melanjutkan</p>
+
+      <div class="field">
+        <label>Email / Username</label>
+        <input type="text" id="loginUser" placeholder="Masukkan email atau username Anda">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Masukkan password Anda">
+      </div>
+      <div id="loginError" class="error-text" style="display:none;">Email/username atau password salah.</div>
+
+      <div class="row-between">
+        <label class="checkline"><input type="checkbox" checked> Ingat saya</label>
+        <a href="#">Lupa password?</a>
+      </div>
+
+      <button class="btn btn-primary" onclick="doLogin()">↪ Login</button>
+
+      <div class="info-box">
+        <b>Akses Portal</b><br>
+        Pastikan Anda memiliki akun yang telah didaftarkan oleh YKP BRI. Hubungi tim SBD YKP BRI jika mengalami kendala akses.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOME ================= -->
+<section class="screen" id="home">
+  <div class="topbar">
+    <div class="brandmark">YKP <span style="color:#FF8A8A">BRI</span>
+      <div class="divider"></div>
+      <div class="sub">Portal Perusahaan Anak</div>
+    </div>
+    <div class="user-chip" onclick="goScreen('login')"><div class="av">A</div> User PA ▾</div>
+  </div>
+  <div class="crumbs">Beranda</div>
+  <main class="app">
+    <div class="home-grid">
+      <div>
+        <h2>Menu utama</h2>
+        <div class="menu-card" onclick="goScreen('upload')">
+          <div class="icon">⇧</div>
+          <div>
+            <h3>Target RKA PA</h3>
+            <p>Unggah dan pantau status dokumen RKA Perusahaan Anak.</p>
+          </div>
+        </div>
+      </div>
+      <div class="account-panel">
+        <div class="av-lg">A</div>
+        <div class="name">User PA</div>
+        <div class="role">PT BRI Ventura Investama</div>
+        <a href="#">✎ Edit information</a>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ================= UPLOAD LIST ================= -->
+<section class="screen" id="upload">
+  <div class="topbar">
+    <div class="brandmark">YKP <span style="color:#FF8A8A">BRI</span>
+      <div class="divider"></div>
+      <div class="sub">Portal Perusahaan Anak</div>
+    </div>
+    <div class="user-chip" onclick="goScreen('login')"><div class="av">A</div> User PA ▾</div>
+  </div>
+  <div class="crumbs"><a href="#" onclick="goScreen('home')" style="color:inherit;text-decoration:none;">Beranda</a> / <span>Upload RKA</span></div>
+  <main class="app">
+    <div class="toolbar">
+      <button class="btn-sm" onclick="openModal()">⇧ Upload Target RKA</button>
+      <div class="search-box">🔍 Cari nomor dokumen...</div>
+    </div>
+
+    <div class="empty-note" id="emptyNote" style="display:none;">
+      Belum ada dokumen RKA yang diunggah untuk akun Anda. Klik <b>Upload Target RKA</b> untuk mulai.
+    </div>
+
+    <table class="rka">
+      <thead>
+        <tr>
+          <th>No. Dokumen</th><th>Tahun RKA</th><th>Versi</th><th>Tanggal Upload</th>
+          <th>Periode RKA</th><th>Status</th><th>Approval Tahap</th><th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="rkaBody">
+        <tr>
+          <td>RKA-2025/00025</td><td>2025</td><td>V3</td><td>02/06/2025 10:15</td>
+          <td>Jan – Des 2025</td><td><span class="badge draft">Draft</span></td><td>–</td>
+          <td><button class="icon-btn">⬇</button></td>
+        </tr>
+        <tr>
+          <td>RKA-2025/00024</td><td>2025</td><td>V2</td><td>30/05/2025 16:30</td>
+          <td>Jan – Des 2025</td><td><span class="badge submitted">Submitted</span></td><td>Checker</td>
+          <td><button class="icon-btn">⬇</button></td>
+        </tr>
+        <tr>
+          <td>RKA-2025/00021</td><td>2025</td><td>V3</td><td>27/05/2025 11:05</td>
+          <td>Jan – Des 2025</td><td><span class="badge approved">Approved</span></td><td>Approved</td>
+          <td><button class="icon-btn">⬇</button></td>
+        </tr>
+        <tr>
+          <td>RKA-2025/00019</td><td>2025</td><td>V1</td><td>23/05/2025 10:30</td>
+          <td>Jan – Des 2025</td><td><span class="badge rejected">Rejected</span></td><td>Signer</td>
+          <td><button class="icon-btn">⬇</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</section>
+
+<!-- ================= AFTER UPLOAD ================= -->
+<section class="screen" id="afterUpload">
+  <div class="topbar">
+    <div class="brandmark">YKP <span style="color:#FF8A8A">BRI</span>
+      <div class="divider"></div>
+      <div class="sub">Portal Perusahaan Anak</div>
+    </div>
+    <div class="user-chip" onclick="goScreen('login')"><div class="av">A</div> User PA ▾</div>
+  </div>
+  <main class="app">
+    <div class="confirm-wrap">
+      <div class="confirm-icon">✓</div>
+      <h2>Dokumen berhasil diunggah</h2>
+      <p>RKA Anda telah masuk ke antrean review. Anda akan menerima notifikasi setiap kali status berubah.</p>
+
+      <div class="receipt">
+        <div class="r-row"><span class="k">No. Dokumen</span><span class="v" id="rcptDoc">RKA-2025/00026</span></div>
+        <div class="r-row"><span class="k">Tahun RKA</span><span class="v" id="rcptYear">2025</span></div>
+        <div class="r-row"><span class="k">Periode</span><span class="v" id="rcptPeriod">Jan – Des 2025</span></div>
+        <div class="r-row"><span class="k">Status</span><span class="v"><span class="badge draft">Draft</span></span></div>
+        <div class="r-row"><span class="k">Approval berikutnya</span><span class="v">Checker</span></div>
+      </div>
+
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" onclick="goScreen('upload')">Kembali ke daftar</button>
+        <button class="btn btn-primary" onclick="openModal()">Upload dokumen lain</button>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ================= UPLOAD MODAL ================= -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>Upload Target RKA</h3>
+    <p class="sub">Lengkapi periode RKA dan unggah berkas dokumen.</p>
+
+    <div class="field">
+      <label>Tahun RKA</label>
+      <input type="text" id="m_year" value="2025">
+    </div>
+    <div class="field">
+      <label>Periode RKA</label>
+      <input type="text" id="m_period" value="Jan – Des 2025">
+    </div>
+
+    <div class="dropzone" onclick="pickFile()">
+      ⇧ Klik untuk pilih berkas, atau seret ke sini
+      <div class="fname" id="fileName"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Batal</button>
+      <button class="btn btn-primary" onclick="submitUpload()">Upload</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function goScreen(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+  function doLogin(){
+    const u = document.getElementById('loginUser').value.trim();
+    const err = document.getElementById('loginError');
+    if(u.length === 0){ err.style.display='block'; return; }
+    err.style.display = 'none';
+    goScreen('home');
+  }
+  function openModal(){
+    document.getElementById('fileName').textContent = '';
+    document.getElementById('overlay').classList.add('active');
+  }
+  function closeModal(){
+    document.getElementById('overlay').classList.remove('active');
+  }
+  function pickFile(){
+    document.getElementById('fileName').textContent = 'RKA_PT_BRI_Ventura_2025.xlsx';
+  }
+  function submitUpload(){
+    document.getElementById('rcptYear').textContent = document.getElementById('m_year').value;
+    document.getElementById('rcptPeriod').textContent = document.getElementById('m_period').value;
+    closeModal();
+    goScreen('afterUpload');
+  }
+</script>
+
+</body>
+</html>
