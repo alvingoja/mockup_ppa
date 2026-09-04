@@ -196,6 +196,17 @@
     cursor:pointer;font-size:14px;color:var(--ink-soft);
   }
   .icon-btn:hover{border-color:var(--indigo);color:var(--indigo);}
+  .action-cell{display:flex;gap:6px;align-items:center;}
+  .btn-xs{
+    padding:6px 12px;border-radius:7px;border:none;
+    font-family:'Plus Jakarta Sans';font-weight:700;font-size:12px;cursor:pointer;
+  }
+  .btn-xs.submit{background:var(--blue-bg);color:var(--blue);}
+  .btn-xs.submit:hover{background:#D6E1F8;}
+  .btn-xs.approve{background:var(--green-bg);color:var(--green);}
+  .btn-xs.approve:hover{background:#D2EEDD;}
+  .btn-xs.reject{background:var(--red-bg);color:var(--red);}
+  .btn-xs.reject:hover{background:#F6D6D6;}
 
   .empty-note{
     background:var(--lavender);border:1px solid var(--lavender-line);border-radius:10px;
@@ -320,6 +331,13 @@
             <p>Unggah dan pantau status dokumen RKA Perusahaan Anak.</p>
           </div>
         </div>
+        <div class="menu-card" style="margin-top:14px;" onclick="goScreen('settings')">
+          <div class="icon">⚙</div>
+          <div>
+            <h3>Pengaturan Approval</h3>
+            <p>Atur siapa yang menjadi Checker dan Signer untuk dokumen RKA.</p>
+          </div>
+        </div>
       </div>
       <div class="account-panel">
         <div class="av-lg">A</div>
@@ -361,23 +379,35 @@
       <tbody id="rkaBody">
         <tr>
           <td>RKA-2025/00025</td><td>2025</td><td>V3</td><td>02/06/2025 10:15</td>
-          <td>Jan – Des 2025</td><td><span class="badge draft">Draft</span></td><td>–</td>
-          <td><button class="icon-btn">⬇</button></td>
+          <td>Jan – Des 2025</td><td><span class="badge draft">Draft</span></td><td class="tahap">–</td>
+          <td><div class="action-cell">
+            <button class="btn-xs submit" onclick="submitDoc(this)">Submit</button>
+            <button class="icon-btn">⬇</button>
+          </div></td>
         </tr>
         <tr>
           <td>RKA-2025/00024</td><td>2025</td><td>V2</td><td>30/05/2025 16:30</td>
-          <td>Jan – Des 2025</td><td><span class="badge submitted">Submitted</span></td><td>Checker</td>
-          <td><button class="icon-btn">⬇</button></td>
+          <td>Jan – Des 2025</td><td><span class="badge submitted">Submitted</span></td><td class="tahap">Checker</td>
+          <td><div class="action-cell">
+            <button class="btn-xs approve" onclick="approveDoc(this)">Approve</button>
+            <button class="btn-xs reject" onclick="rejectDoc(this)">Reject</button>
+            <button class="icon-btn">⬇</button>
+          </div></td>
         </tr>
         <tr>
           <td>RKA-2025/00021</td><td>2025</td><td>V3</td><td>27/05/2025 11:05</td>
-          <td>Jan – Des 2025</td><td><span class="badge approved">Approved</span></td><td>Approved</td>
-          <td><button class="icon-btn">⬇</button></td>
+          <td>Jan – Des 2025</td><td><span class="badge approved">Approved</span></td><td class="tahap">Approved</td>
+          <td><div class="action-cell">
+            <button class="icon-btn">⬇</button>
+          </div></td>
         </tr>
         <tr>
           <td>RKA-2025/00019</td><td>2025</td><td>V1</td><td>23/05/2025 10:30</td>
-          <td>Jan – Des 2025</td><td><span class="badge rejected">Rejected</span></td><td>Signer</td>
-          <td><button class="icon-btn">⬇</button></td>
+          <td>Jan – Des 2025</td><td><span class="badge rejected">Rejected</span></td><td class="tahap">Signer</td>
+          <td><div class="action-cell">
+            <button class="btn-xs submit" onclick="submitDoc(this)">Submit ulang</button>
+            <button class="icon-btn">⬇</button>
+          </div></td>
         </tr>
       </tbody>
     </table>
@@ -410,6 +440,51 @@
       <div class="confirm-actions">
         <button class="btn btn-ghost" onclick="goScreen('upload')">Kembali ke daftar</button>
         <button class="btn btn-primary" onclick="openModal()">Upload dokumen lain</button>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+<section class="screen" id="settings">
+  <div class="topbar">
+    <div class="brandmark">YKP <span style="color:#FF8A8A">BRI</span>
+      <div class="divider"></div>
+      <div class="sub">Portal Perusahaan Anak</div>
+    </div>
+    <div class="user-chip" onclick="goScreen('login')"><div class="av">A</div> User PA ▾</div>
+  </div>
+  <div class="crumbs"><a href="#" onclick="goScreen('home')" style="color:inherit;text-decoration:none;">Beranda</a> / <span>Pengaturan Approval</span></div>
+  <main class="app" style="max-width:640px;">
+    <h2 style="margin:8px 0 4px;">Pengaturan Approval</h2>
+    <p style="color:var(--ink-soft);font-size:13.5px;margin:0 0 22px;">Tentukan siapa yang bertindak sebagai Checker dan Signer untuk dokumen RKA yang diajukan dari akun ini.</p>
+
+    <div class="menu-card" style="max-width:none;flex-direction:column;align-items:stretch;cursor:default;padding:24px;">
+      <div class="field">
+        <label>Checker</label>
+        <select id="s_checker" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px;background:#FCFCFE;">
+          <option>Ahmad Fauzi</option>
+          <option selected>Siti Mahmudah</option>
+          <option>Rizky Kurniawan</option>
+        </select>
+        <div style="font-size:12px;color:var(--ink-soft);margin-top:5px;">Memeriksa kelengkapan dokumen sebelum diteruskan ke Signer.</div>
+      </div>
+
+      <div class="field" style="margin-top:6px;">
+        <label>Signer</label>
+        <select id="s_signer" style="width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font-family:inherit;font-size:14px;background:#FCFCFE;">
+          <option>Ahmad Fauzi</option>
+          <option>Rizky Kurniawan</option>
+          <option selected>Bambang Setiawan</option>
+        </select>
+        <div style="font-size:12px;color:var(--ink-soft);margin-top:5px;">Menyetujui dokumen setelah lolos pemeriksaan Checker.</div>
+      </div>
+
+      <div id="settingsSaved" style="display:none;font-size:13px;color:var(--green);margin-top:14px;">✓ Pengaturan tersimpan.</div>
+
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button class="btn btn-ghost" onclick="goScreen('home')">Batal</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Simpan pengaturan</button>
       </div>
     </div>
   </main>
@@ -464,6 +539,36 @@
   }
   function pickFile(){
     document.getElementById('fileName').textContent = 'RKA_PT_BRI_Ventura_2025.xlsx';
+  }
+  function setRowStatus(row, badgeClass, badgeText, tahapText){
+    const badge = row.querySelector('.badge');
+    badge.className = 'badge ' + badgeClass;
+    badge.textContent = badgeText;
+    row.querySelector('.tahap').textContent = tahapText;
+  }
+  function submitDoc(btn){
+    const row = btn.closest('tr');
+    setRowStatus(row, 'submitted', 'Submitted', 'Checker');
+    btn.closest('.action-cell').querySelectorAll('.btn-xs').forEach(b => b.remove());
+  }
+  function approveDoc(btn){
+    const row = btn.closest('tr');
+    setRowStatus(row, 'approved', 'Approved', 'Approved');
+    btn.closest('.action-cell').querySelectorAll('.btn-xs').forEach(b => b.remove());
+  }
+  function rejectDoc(btn){
+    const row = btn.closest('tr');
+    setRowStatus(row, 'rejected', 'Rejected', 'Signer');
+    const cell = btn.closest('.action-cell');
+    cell.querySelectorAll('.btn-xs').forEach(b => b.remove());
+    const resubmit = document.createElement('button');
+    resubmit.className = 'btn-xs submit';
+    resubmit.textContent = 'Submit ulang';
+    resubmit.onclick = function(){ submitDoc(resubmit); };
+    cell.prepend(resubmit);
+  }
+  function saveSettings(){
+    document.getElementById('settingsSaved').style.display = 'block';
   }
   function submitUpload(){
     document.getElementById('rcptYear').textContent = document.getElementById('m_year').value;
